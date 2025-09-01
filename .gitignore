@@ -18,3 +18,12 @@ local.properties
 /build/
 app/build/
 */build/
+
+# Android Studio
+.idea/
+
+# Gradle cache
+.gradle/
+
+# Logs
+*.log
