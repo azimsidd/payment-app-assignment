@@ -8,12 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.chip.Chip;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -132,6 +134,26 @@ public class MainActivity extends AppCompatActivity implements AddPaymentDialog.
     private void savePayments() {
         fileManager.savePayments(paymentManager.getPayments());
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("payments", new ArrayList<>(paymentManager.getPayments()));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        List<Payment> savedPayments = (List<Payment>) savedInstanceState.getSerializable("payments");
+        if (savedPayments != null) {
+            paymentManager = new PaymentManager();
+            for (Payment payment : savedPayments) {
+                paymentManager.addPayment(payment);
+            }
+            updateUI();
+        }
+    }
+
 }
 
 
